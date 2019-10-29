@@ -1,5 +1,3 @@
-
-import config
 import os
 import slack
 
@@ -19,6 +17,6 @@ def say_hello(**payload):
             thread_ts=thread_ts
         )
 
-slack_token = config.slack['secret']
+slack_token = os.environ['SLACK_API_TOKEN']
 rtm_client = slack.RTMClient(token=slack_token)
 rtm_client.start()

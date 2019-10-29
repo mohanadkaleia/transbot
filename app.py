@@ -1,10 +1,12 @@
 from flask import Flask
 from slackeventsapi import SlackEventAdapter
+import os
 import config
 
 
 # This `app` represents your existing Flask app
 app = Flask(__name__)
+# slack_token = os.environ['SLACK_BOT_TOKEN']
 
 
 # An example of one of your Flask app's routes

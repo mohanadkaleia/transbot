@@ -44,8 +44,15 @@ class Bot:
         if event["type"] != "message":
             return
 
-        if event["text"].startswith(f"<@{self.user['id']}>"):
-            print(event["text"].replace(f"<@{self.user['id']}>", ""))
+        if event.get("text", "").startswith(f"<@{self.user['id']}>"):
+            message = event["text"].replace(f"<@{self.user['id']}>", "")
+            # TODO:
+            # 1. Read the excel file and return the term in case it is there
+            # 2. Add it to the Excel sheet in case it is not there
+            # 3. Return a message that the term has been added
+            self.post_message(
+                event["channel"], f"I got your message! you sent '{message}'"
+            )
 
     def post_message(self, channel, message):
         self.client.chat.post_message(

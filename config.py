@@ -1,3 +1,3 @@
 slack = {
-    'secret': 'f88b22657206da084b2b25f50f356362',
+    'secret': 'xoxb-756976316518-800989308595-KsVZl3h3zAy2dOHMQheudiD5',
 }

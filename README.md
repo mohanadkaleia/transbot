@@ -1,4 +1,5 @@
 # Transbot 🤖
+[![forthebadge](https://forthebadge.com/images/badges/made-with-python.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/makes-people-smile.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com)
 
 Transbot is a Python Slackbot that helps in translating AI terms from Arabic into English.
 
@@ -10,6 +11,7 @@ In order to use the app, we need to set the following variables:
 ```bash
 export SLACK_BOT_TOKEN=xoxob**********
 export GOOGLE_APPLICATION_CREDENTIALS="$(< cred.json)"
+export SHEET_URL=https://google.sheet.url
 ```
 Where the slack bot token is the token you get when setting up a Slack app. While you can get the cred.json when you set a Google cloud API project credentials. 
 

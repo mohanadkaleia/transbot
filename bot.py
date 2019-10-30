@@ -21,6 +21,7 @@ class Bot:
         self.sheet = sheet.Sheet(sheet_url)
         self.users = {}
         self.user = self.get_user()
+        self.list_new_terms()
         self.run()
 
     def get_user(self):
@@ -61,9 +62,9 @@ class Bot:
             row = [message, "", "", author["name"], str(datetime.datetime.today())]
             self.sheet.insert(row)
 
-    def post_message(self, channel, message):
+    def post_message(self, channel, message, attachment=None):
         self.client.chat.post_message(
-            channel=channel, text=message,
+            channel=channel, text=message, attachments=attachment
         )
 
     def upload(self, file, title, comment, channel):
@@ -79,4 +80,44 @@ class Bot:
         while True:
             message = ws.recv()
             self.handle(message)
+
+    def list_new_terms(self):
+        message = {"blocks": []}
+
+        terms = self.sheet.get_untranslated_terms()
+        if not terms:
+            message["blocks"].append(
+                {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": "Yay!! all terms are translated so far!! whooray!",
+                    },
+                },
+            )
+        else:
+            for i, term in enumerate(terms, 1):
+                message["blocks"].append(
+                    {
+                        "type": "section",
+                        "text": {
+                            "type": "mrkdwn",
+                            "text": f"{i}: *{term['English']}*",
+                        },
+                    },
+                )
+            message["blocks"].append(
+                {
+                    "type": "image",
+                    "title": {"type": "plain_text", "text": "image1", "emoji": True},
+                    "image_url": "https://media.giphy.com/media/o5oLImoQgGsKY/200w_d.gif",
+                    "alt_text": "image1",
+                }
+            )
+
+        self.post_message(
+            "terms",
+            "Hey there 👋 I'm Transbot. I'm here to notify you about terms that still need a translation.\nHere is a list of all pending terms:",
+            [message],
+        )
 

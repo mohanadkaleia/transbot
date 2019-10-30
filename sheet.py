@@ -25,3 +25,11 @@ class Sheet:
         row_count = len(records)
         self.sheet.insert_row(row, row_count + 2)
 
+    def get_untranslated_terms(self):
+        untranslated = []
+        for term in self.all():
+            if not term["Arabic"]:
+                untranslated.append(term)
+
+        return untranslated
+

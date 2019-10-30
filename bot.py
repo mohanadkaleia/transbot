@@ -1,6 +1,6 @@
 import websocket
 import json
-
+import sheet
 from slacker import Slacker
 
 
@@ -13,11 +13,11 @@ class ConnectionFailed(Exception):
 
 
 class Bot:
-    def __init__(self, name, token):
+    def __init__(self, name, token, sheet_url):
         self.name = name
         self.client = Slacker(token)
         self.connect()
-
+        self.sheet = sheet.Sheet(sheet_url)
         self.user = self.get_user()
         self.run()
 
@@ -50,9 +50,8 @@ class Bot:
             # 1. Read the excel file and return the term in case it is there
             # 2. Add it to the Excel sheet in case it is not there
             # 3. Return a message that the term has been added
-            self.post_message(
-                event["channel"], f"I got your message! you sent '{message}'"
-            )
+            self.post_message(event["channel"], f"Yay! I added the term '{message}'")
+            self.sheet.insert([message])
 
     def post_message(self, channel, message):
         self.client.chat.post_message(

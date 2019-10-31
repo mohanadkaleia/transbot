@@ -59,6 +59,17 @@ class Bot:
         elif raw_message.startswith("/pending"):
             self.pending(channel)
         else:
+            for term in self.sheet.all():
+                if raw_message in term["English"]:
+                    self.post_message(
+                        channel, f"Seems {raw_message} is already in the dictionary."
+                    )
+                    if term["Arabic"]:
+                        self.post_message(
+                            channel, f"Here is its translation {term['Arabic']}"
+                        )
+                        return
+
             author = self.users[user_id]
             row = [raw_message, "", "", author["name"], str(datetime.datetime.today())]
             self.sheet.insert(row)

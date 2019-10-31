@@ -21,7 +21,6 @@ class Bot:
         self.sheet = sheet.Sheet(sheet_url)
         self.users = {}
         self.user = self.get_user()
-        self.list_new_terms()
         self.run()
 
     def get_user(self):
@@ -52,15 +51,18 @@ class Bot:
 
         if event.get("text", "").startswith(f"<@{self.user['id']}>"):
             message = event["text"].replace(f"<@{self.user['id']}>", "")
+            self.exec_command(event["channel"], event["user"], message.strip())
 
-            # TODO:
-            # 1. Read the excel file and return the term in case it is there
-            # 2. Add it to the Excel sheet in case it is not there
-            # 3. Return a message that the term has been added
-            self.post_message(event["channel"], f"Yay! I added the term '{message}'")
-            author = self.users[event["user"]]
-            row = [message, "", "", author["name"], str(datetime.datetime.today())]
+    def exec_command(self, channel, user_id, raw_message):
+        if raw_message.startswith("help") or raw_message.startswith("/help"):
+            self.help(channel)
+        elif raw_message.startswith("/pending"):
+            self.pending(channel)
+        else:
+            author = self.users[user_id]
+            row = [raw_message, "", "", author["name"], str(datetime.datetime.today())]
             self.sheet.insert(row)
+            self.post_message(channel, f"Yay! I added the term '{raw_message}'")
 
     def post_message(self, channel, message, attachment=None):
         self.client.chat.post_message(
@@ -81,7 +83,7 @@ class Bot:
             message = ws.recv()
             self.handle(message)
 
-    def list_new_terms(self):
+    def pending(self, channel):
         message = {"blocks": []}
 
         terms = self.sheet.get_untranslated_terms()
@@ -116,8 +118,53 @@ class Bot:
             )
 
         self.post_message(
-            "terms",
+            channel,
             "Hey there 👋 I'm Transbot. I'm here to notify you about terms that still need a translation.\nHere is a list of all pending terms:",
             [message],
+        )
+
+    def help(self, channel):
+        message = {
+            "blocks": [
+                {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": "Hey there 👋 I'm Transbot. I'm here to help you create and manage terms in the field of AI in Slack.\n Here is what I can do:",
+                    },
+                },
+                {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": "*1️⃣ Use the `/pending` command*. Mention me and then type `/pending`, and I will list all terms that are pending translation.",
+                    },
+                },
+                {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": "*2️⃣ Add new term to the dictionary.* If you want to add a new term to the dictionary just mention my name followed by the term you want to add. Example: `[at]transbot science` if the term exists in the dictionary I will return its translation other wise I will just add it happily to the dicrtionary",
+                    },
+                },
+                {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": "*3️⃣ Use the `/help` command*. Mention me and then type `/help`, and I will help you as much as I can 🥴.",
+                    },
+                },
+                {
+                    "type": "image",
+                    "title": {"type": "plain_text", "text": "image1", "emoji": True},
+                    "image_url": "https://media.giphy.com/media/WxIn3PAoXHqZWbR6eg/200w_d.gif",
+                    "alt_text": "image1",
+                },
+                {"type": "divider"},
+            ]
+        }
+
+        self.post_message(
+            channel, "", [message],
         )
 

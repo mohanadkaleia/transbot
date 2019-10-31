@@ -2,6 +2,7 @@ import websocket
 import json
 import sheet
 import datetime
+import time
 from slacker import Slacker
 
 
@@ -86,13 +87,18 @@ class Bot:
         )
 
     def run(self):
-        rtm = self.client.rtm.start()
-        url = rtm.body["url"]
-        ws = websocket.WebSocket()
-        ws.connect(url)
         while True:
-            message = ws.recv()
-            self.handle(message)
+            try:
+                rtm = self.client.rtm.start()
+                url = rtm.body["url"]
+                ws = websocket.WebSocket()
+                ws.connect(url)
+                while True:
+                    message = ws.recv()
+                    self.handle(message)
+            except Exception:
+                print("Oh oh.. something went wrong.. trying in 3 sec..")
+                time.sleep(3)
 
     def pending(self, channel):
         message = {"blocks": []}

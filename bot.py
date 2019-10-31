@@ -96,7 +96,8 @@ class Bot:
                 while True:
                     message = ws.recv()
                     self.handle(message)
-            except Exception:
+            except Exception as e:
+                print(e)
                 print("Oh oh.. something went wrong.. trying in 3 sec..")
                 time.sleep(3)
 

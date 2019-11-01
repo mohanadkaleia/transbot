@@ -48,8 +48,8 @@ class Bot:
         if event["type"] != "message":
             return
 
-        if event.get("text", "").startswith("<@{self.user['id']}>"):
-            message = event["text"].replace("<@{self.user['id']}>", "")
+        if event.get("text", "").startswith("<@%s>" % (self.user['id'])):
+            message = event["text"].replace("<@%s>" % (self.user['id']), "")
             self.exec_command(event["channel"], event["user"], message.strip())
 
     def exec_command(self, channel, user_id, raw_message):
@@ -177,7 +177,8 @@ class Bot:
                 {"type": "divider"},
             ]
         }
-
+        print('!!!')
+        print(channel)
         self.post_message(
             channel, "", [message],
         )

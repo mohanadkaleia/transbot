@@ -38,9 +38,7 @@ class Bot:
     def connect(self):
         # Check for success
         if self.client.api.test().successful:
-            print(
-                f"{self.name} Connected to {self.client.team.info().body['team']['name']}."
-            )
+            print(f"%s Connected to %s." %(self.name, self.client.team.info().body['team']['name']))
         else:
             raise ConnectionFailed("Connection failed please try again!")
 

@@ -5,6 +5,9 @@ Transbot is a Python Slackbot that helps in translating AI terms from Arabic int
 
 ## Installation
 This Slackbot is not intended to be installed anywhere, it is already installed on Slack workspace. I shared the source code of it if anyone wants to build something similar.
+```bash
+pip install -r requirments.txt
+```
 
 ## Set the environment variables
 In order to use the app, we need to set the following variables: 

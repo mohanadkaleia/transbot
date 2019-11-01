@@ -60,19 +60,17 @@ class Bot:
         else:
             for term in self.sheet.all():
                 if raw_message in term["English"]:
-                    self.post_message(
-                        channel, f"Seems {raw_message} is already in the dictionary."
-                    )
+                    self.post_message(channel, "Seems %s is already in the dictionary." % (raw_message))
                     if term["Arabic"]:
                         self.post_message(
-                            channel, f"Here is its translation {term['Arabic']}"
+                            channel, "Here is its translation %s" %(term['Arabic'])
                         )
                         return
 
             author = self.users[user_id]
             row = [raw_message, "", "", author["name"], str(datetime.datetime.today())]
             self.sheet.insert(row)
-            self.post_message(channel, f"Yay! I added the term '{raw_message}'")
+            self.post_message(channel, "Yay! I added the term %s" % (raw_message))
 
     def post_message(self, channel, message, attachment=None):
         self.client.chat.post_message(
@@ -120,7 +118,7 @@ class Bot:
                         "type": "section",
                         "text": {
                             "type": "mrkdwn",
-                            "text": f"{i}: *{term['English']}*",
+                            "text": "$s: *{term['English']}*" % (i),
                         },
                     },
                 )

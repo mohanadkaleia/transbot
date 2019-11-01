@@ -31,7 +31,7 @@ class Bot:
                 self.users[user["name"]] = user
 
         if self.name not in self.users:
-            raise InvalidBot(f"Bot with name {self.name} is not found")
+            raise InvalidBot("Bot with name %s is not found"  % (self.name))
 
         return self.users[self.name]
 

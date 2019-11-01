@@ -3,4 +3,4 @@ venv/*
 __pycache__
 *.pyc
 cred.json
-
+env.txt

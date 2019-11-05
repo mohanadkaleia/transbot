@@ -71,7 +71,7 @@ class Bot:
                         self.post_message(
                             channel, "Here is its translation %s" %(term['Arabic'])
                         )
-                        return
+                    return
 
             author = self.users[user_id]
             row = [raw_message, "", "", author["name"], str(datetime.datetime.today())]

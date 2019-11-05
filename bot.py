@@ -124,7 +124,7 @@ class Bot:
                         "type": "section",
                         "text": {
                             "type": "mrkdwn",
-                            "text": "$s: *{term['English']}*" % (i),
+                            "text": "%s: *{%s}*" % (i, term['English']),
                         },
                     },
                 )

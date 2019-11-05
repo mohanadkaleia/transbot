@@ -4,3 +4,4 @@ __pycache__
 *.pyc
 cred.json
 env.txt
+*.log

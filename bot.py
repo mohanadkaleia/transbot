@@ -3,7 +3,10 @@ import json
 import sheet
 import datetime
 import time
+import logger
 from slacker import Slacker
+
+log = logger.get_logger(__name__)
 
 
 class InvalidBot(Exception):
@@ -40,6 +43,7 @@ class Bot:
         if self.client.api.test().successful:
             print("%s Connected to %s." %(self.name, self.client.team.info().body['team']['name']))
         else:
+            log.error("Could not connect with Slack API")
             raise ConnectionFailed("Connection failed please try again!")
 
     def handle(self, event):
@@ -54,8 +58,10 @@ class Bot:
 
     def exec_command(self, channel, user_id, raw_message):
         if raw_message.startswith("help") or raw_message.startswith("/help"):
+            log.info("Received help command")
             self.help(channel)
         elif raw_message.startswith("/pending"):
+            log.info("Received pending command")
             self.pending(channel)
         else:
             for term in self.sheet.all():
@@ -93,7 +99,7 @@ class Bot:
                     message = ws.recv()
                     self.handle(message)
             except Exception as e:
-                print(e)
+                log.error(e)
                 print("Oh oh.. something went wrong.. trying in 3 sec..")
                 time.sleep(3)
 

@@ -64,6 +64,7 @@ class Bot:
             log.info("Received pending command")
             self.pending(channel)
         else:
+            log.info("Received term %s" % (raw_message))
             for term in self.sheet.all():
                 if raw_message in term["English"]:
                     self.post_message(channel, "Seems %s is already in the dictionary." % (raw_message))

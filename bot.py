@@ -42,6 +42,7 @@ class Bot:
         # Check for success
         if self.client.api.test().successful:
             print("%s Connected to %s." %(self.name, self.client.team.info().body['team']['name']))
+            log.info("Bot has been connected successfully")
         else:
             log.error("Could not connect with Slack API")
             raise ConnectionFailed("Connection failed please try again!")

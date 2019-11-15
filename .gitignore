@@ -5,3 +5,4 @@ __pycache__
 cred.json
 env.txt
 *.log
+config.py

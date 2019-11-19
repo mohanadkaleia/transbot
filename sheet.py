@@ -4,6 +4,7 @@ import os
 import json
 from oauth2client.service_account import ServiceAccountCredentials
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class Sheet:
     def __init__(self, sheet_url):
@@ -12,6 +13,8 @@ class Sheet:
         self.authorize(sheet_url)
 
     def all(self):
+        if self.creds.access_token_expired:
+            self.client.login()
         return self.sheet.get_all_records()
 
     def insert(self, row):
@@ -29,7 +32,7 @@ class Sheet:
 
     def authorize(self, sheet_url):
         self.creds = ServiceAccountCredentials.from_json_keyfile_name(
-            'cred.json', self.scope
+            BASE_DIR + '/cred.json', self.scope
         )
 
         self.client = gspread.authorize(self.creds)

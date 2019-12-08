@@ -64,6 +64,9 @@ class Bot:
         elif raw_message.startswith("/pending"):
             log.info("Received pending command")
             self.pending(channel)
+        elif raw_message.startswith("/all"):
+            log.info("Received pending command")
+            self.all(channel)
         else:
             log.info("Received term %s" % (raw_message))
             for term in self.sheet.all():
@@ -106,6 +109,47 @@ class Bot:
                 print("Oh oh.. something went wrong.. trying in 3 sec..")
                 time.sleep(3)
 
+    def all(self, channel):
+        message = {"blocks": []}
+
+        terms = self.sheet.all()
+        if not terms:
+            message["blocks"].append(
+                {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": "Hmmm.. the dictionary is empty.. that is weird!",
+                    },
+                },
+            )
+        else:
+            for i, term in enumerate(terms, 1):
+                message["blocks"].append(
+                    {
+                        "type": "section",
+                        "text": {
+                            "type": "mrkdwn",
+                            "text": "%s: `%s` -> `%s`" % (i, term['English'], term['Arabic']),
+                        },
+                    },
+                )
+            message["blocks"].append(
+                {
+                    "type": "image",
+                    "title": {"type": "plain_text", "text": "image1", "emoji": True},
+                    "image_url": "https://media.giphy.com/media/o5oLImoQgGsKY/200w_d.gif",
+                    "alt_text": "image1",
+                }
+            )
+
+        self.post_message(
+            channel,
+            "Here is a list of all terms in the dictionary including the pending ones 😇.\n:",
+            [message],
+        )
+
+
     def pending(self, channel):
         message = {"blocks": []}
 
@@ -127,7 +171,7 @@ class Bot:
                         "type": "section",
                         "text": {
                             "type": "mrkdwn",
-                            "text": "%s: *{%s}*" % (i, term['English']),
+                            "text": "%s: `%s`" % (i, term['English']),
                         },
                     },
                 )
@@ -142,7 +186,7 @@ class Bot:
 
         self.post_message(
             channel,
-            "Hey there 👋 I'm Transbot. I'm here to notify you about terms that still need a translation.\nHere is a list of all pending terms:",
+            "Here is a list of all pending terms: 👻",
             [message],
         )
 
@@ -175,6 +219,13 @@ class Bot:
                     "text": {
                         "type": "mrkdwn",
                         "text": "*3️⃣ Use the `/help` command*. Mention me and then type `/help`, and I will help you as much as I can 🥴.",
+                    },
+                },
+                {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": "*4️⃣ Use the `/all` command*. this command returns all terms in the dictionary including the pending ones 🤓.",
                     },
                 },
                 {

@@ -124,13 +124,13 @@ class Bot:
                 },
             )
         else:
-            for i, term in enumerate(terms, 1):
+            for term in terms:
                 message["blocks"].append(
                     {
                         "type": "section",
                         "text": {
                             "type": "mrkdwn",
-                            "text": "%s: `%s` -> `%s`" % (i, term['English'], term['Arabic']),
+                            "text": "`%s` -> `%s`" % (term['English'], term['Arabic']),
                         },
                     },
                 )

@@ -67,18 +67,19 @@ class Bot:
         else:
             log.info("Received term %s" % (raw_message))
             for term in self.sheet.all():
-                if raw_message in term["English"]:
-                    self.post_message(channel, "Seems %s is already in the dictionary." % (raw_message))
+                if raw_message.lower() in term["English"].lower():                    
                     if term["Arabic"]:
                         self.post_message(
-                            channel, "Here is its translation %s" %(term['Arabic'])
-                        )
+                            channel, "`%s`: `%s` 🤓" %(term["English"], term['Arabic'])
+                        )                          
+                    else:
+                        self.post_message(channel, "`%s` already exist in the dictionary and pending translation." % (raw_message))
                     return
 
             author = self.users[user_id]
             row = [raw_message, "", "", author["name"], str(datetime.datetime.today())]
             self.sheet.insert(row)
-            self.post_message(channel, "Yay! I added the term %s" % (raw_message))
+            self.post_message(channel, "✅ `%s` has been added!" % (raw_message))
 
     def post_message(self, channel, message, attachment=None):
         self.client.chat.post_message(

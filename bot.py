@@ -69,6 +69,10 @@ class Bot:
             self.all(channel)
         else:
             log.info("Received term %s" % (raw_message))
+            
+            # Clean up non-English letters
+            raw_message = clean(raw_message)
+
             for term in self.sheet.all():
                 if raw_message.lower() in term["English"].lower():                    
                     if term["Arabic"]:
@@ -240,4 +244,13 @@ class Bot:
         self.post_message(
             channel, "", [message],
         )
+
+    
+def clean(message):
+    words = message.split(' ')
+    l = []
+    for word in words:
+        l.append(''.join(letter for letter in word.lower() if 'a' <= letter <= 'z'  or letter.isdigit()))
+    
+    return ' '.join(l).strip()
 
